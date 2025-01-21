@@ -1,0 +1,86 @@
+.home {
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f9;
+    box-sizing: border-box;
+  }
+  
+  .animated-heading {
+    font-size: 5vw;
+    font-weight: bold;
+    color: #5A6DFF;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    animation: slideIn 3s ease-out, fadeIn 3s ease-in forwards;
+    margin-bottom: 20px;
+  }
+  
+  .subheading {
+    font-size: 2.5vw;
+    color: #333;
+    font-weight: normal;
+    letter-spacing: 0.1em;
+    animation: fadeInSubheading 3s ease-in forwards;
+  }
+  
+  @keyframes slideIn {
+    0% {
+      transform: translateY(-50px);
+      opacity: 0;
+    }
+    50% {
+      transform: translateY(10px);
+      opacity: 0.7;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeInSubheading {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .animated-heading {
+      font-size: 8vw;
+      margin-bottom: 15px;
+    }
+    .subheading {
+      font-size: 5vw;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .animated-heading {
+      font-size: 10vw;
+      margin-bottom: 10px;
+    }
+    .subheading {
+      font-size: 7vw;
+    }
+  }
+  

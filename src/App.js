@@ -5,7 +5,7 @@ import Login from './pages/login';
 import Home from './pages/Home';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode'; // Corrected import
+import { jwtDecode } from 'jwt-decode'; 
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

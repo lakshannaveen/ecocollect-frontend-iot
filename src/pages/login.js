@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Login.css'; // Import your CSS for styling
+import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -12,9 +12,23 @@ const Login = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
+  // Check if token exists and is expired when the page loads
+  useEffect(() => {
+    const token = Cookies.get('jwt');
+    if (token) {
+      const decodedToken = JSON.parse(atob(token.split('.')[1])); 
+      const currentTime = Date.now() / 1000; 
+
+      if (decodedToken.exp < currentTime) {
+        Cookies.remove('jwt');
+        setErrorMessage('Session expired. Please log in again.');
+      }
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     let formErrors = {};
     if (!username) formErrors.username = 'Username is required';
     if (!password) formErrors.password = 'Password is required';
@@ -29,12 +43,11 @@ const Login = () => {
         );
 
         if (response.status === 200) {
-          // Set the JWT token in cookies
-          Cookies.set('jwt', response.data.token, { expires: 1 / 24 });
-          setErrorMessage('');  // Clear any error messages
-          setSuccessMessage('Login successful!'); // Set success message
+          Cookies.set('jwt', response.data.token, { expires: 1 / 48 }); // Set expiration to 15 minutes (1/48 days)
+          setErrorMessage(''); 
+          setSuccessMessage('Login successful!'); 
           setTimeout(() => {
-            navigate('/home'); // Redirect to home after 2 seconds
+            navigate('/home'); 
           }, 2000);
         }
       } catch (error) {

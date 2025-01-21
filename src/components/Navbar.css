@@ -1,38 +1,43 @@
 /* Navbar.css */
 
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(90deg, #388E3C, #FFC107); /* Darker Green to Darker Yellow */
-    padding: 10px 20px;
-  }
-  
-  .navbar-logo {
-    font-size: 1.5rem;
-    color: #FFFFFF; /* White */
-    font-weight: bold;
-  }
-  
-  .navbar-links {
-    list-style: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .navbar-item {
-    margin-left: 20px;
-  }
-  
-  .navbar-item a {
-    text-decoration: none;
-    color: #FFFFFF; /* White */
-    font-size: 1rem;
-    transition: color 0.3s ease;
-  }
-  
-  .navbar-item a:hover {
-    color: #0000FF; /* Blue */
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #388E3C, #FFC107); /* Darker Green to Darker Yellow */
+  padding: 10px 20px;
+}
+
+.navbar-logo {
+  font-size: 1.5rem;
+  color: #FFFFFF; /* White */
+  font-weight: bold;
+}
+
+.navbar-logo a {
+  text-decoration: none; 
+  color: #FFFFFF; /* White */
+  font-size: 1.5rem; 
+}
+
+.navbar-links {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-item {
+  margin-left: 20px;
+}
+
+.navbar-item a {
+  text-decoration: none;
+  color: #FFFFFF; /* White */
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.navbar-item a:hover {
+  color: #0000FF; /* Blue */
+}

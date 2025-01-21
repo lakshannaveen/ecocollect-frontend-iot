@@ -3,12 +3,14 @@ import './App.css';
 import Navbar from './components/Navbar';
 import Login from './pages/login';
 import Home from './pages/Home';
+import Map from './pages/Map'; // Import the Map component
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 function App() {
   return (
     <Router>
       <div className="App">
+        <Navbar /> {/* Navbar displayed across all pages */}
         <Routes>
           {/* Route for Login */}
           <Route
@@ -17,15 +19,10 @@ function App() {
           />
 
           {/* Route for Home page */}
-          <Route
-            path="/home"
-            element={
-              <>
-                <Navbar /> {/* Only show Navbar on Home page */}
-                <Home />
-              </>
-            }
-          />
+          <Route path="/home" element={<Home />} />
+
+          {/* Route for Bin Maps */}
+          <Route path="/maps" element={<Map />} /> {/* Map route */}
 
           {/* Default route (redirect to login if no matching route) */}
           <Route path="/" element={<Navigate to="/login" />} />

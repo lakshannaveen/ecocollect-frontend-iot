@@ -1,0 +1,24 @@
+.map-page {
+    height: 100vh; /* Full viewport height */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9; /* Neutral background */
+  }
+  
+  .map-container {
+    height: 80%;
+    width: 90%;
+    max-width: 1200px; /* Responsive design */
+    max-height: 700px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .leaflet-container {
+    height: 100%; /* Full map height */
+    width: 100%;
+  }
+  

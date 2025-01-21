@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 
-const Login = () => {
+const Login = ({ onSuccess }) => { // Receive onSuccess as a prop
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
@@ -12,54 +11,40 @@ const Login = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
-  // Check if token exists and is expired when the page loads
-  useEffect(() => {
-    const token = Cookies.get('jwt');
-    if (token) {
-      const decodedToken = JSON.parse(atob(token.split('.')[1])); 
-      const currentTime = Date.now() / 1000; 
-
-      if (decodedToken.exp < currentTime) {
-        Cookies.remove('jwt');
-        setErrorMessage('Session expired. Please log in again.');
-      }
-    }
-  }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     let formErrors = {};
     if (!username) formErrors.username = 'Username is required';
     if (!password) formErrors.password = 'Password is required';
     setErrors(formErrors);
-
+  
     if (Object.keys(formErrors).length === 0) {
       try {
         const response = await axios.post(
-          'http://localhost:5002/api/account/login',
+          'http://localhost:5002/api/account/login', // Backend API
           { username, password },
-          { withCredentials: true } // Send cookies with request
+          { withCredentials: true }
         );
-
+  
         if (response.status === 200) {
-          Cookies.set('jwt', response.data.token, { expires: 1 / 48 }); // Set expiration to 15 minutes (1/48 days)
-          setErrorMessage(''); 
-          setSuccessMessage('Login successful!'); 
+          setErrorMessage('');
+          setSuccessMessage('Login successful!');
           setTimeout(() => {
-            navigate('/home'); 
+            onSuccess(); // Trigger onSuccess from the parent (App.js)
+            navigate('/home'); // Redirect to home page after success
           }, 2000);
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          setErrorMessage('Invalid credentials');
+          setErrorMessage('Invalid username or password');
         } else {
           setErrorMessage('Something went wrong. Please try again later.');
         }
       }
     }
   };
-
+  
   return (
     <div className="login-container">
       <h2>Login</h2>

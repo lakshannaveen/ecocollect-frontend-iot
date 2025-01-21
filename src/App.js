@@ -5,17 +5,33 @@ import Login from './pages/login';
 import Home from './pages/Home';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode'; // Corrected import
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Check if JWT exists in cookies on component mount
   useEffect(() => {
     const token = Cookies.get('jwt');
     if (token) {
-      setIsLoggedIn(true); // User is logged in if a valid token exists
+      try {
+        const decodedToken = jwtDecode(token); // Decode JWT
+        const currentTime = Date.now() / 1000; // Get current time in seconds
+  
+        if (decodedToken.exp < currentTime) {
+          // If token is expired, remove it and update the state
+          Cookies.remove('jwt');
+          setIsLoggedIn(false);
+        } else {
+          setIsLoggedIn(true); // User is logged in if token is valid
+        }
+      } catch (error) {
+        console.error('Invalid token', error);
+        Cookies.remove('jwt');
+        setIsLoggedIn(false);
+      }
     }
   }, []);
+  
 
   // Handle logout: remove JWT and update state
   const handleLogout = () => {
@@ -23,6 +39,7 @@ function App() {
     setIsLoggedIn(false); // Update state to log the user out
   };
 
+  // Handle login success: update state to reflect login
   const handleLoginSuccess = () => {
     setIsLoggedIn(true); // Update state to show navbar and home page
   };

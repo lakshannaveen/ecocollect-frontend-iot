@@ -9,16 +9,17 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    
     let formErrors = {};
     if (!username) formErrors.username = 'Username is required';
     if (!password) formErrors.password = 'Password is required';
     setErrors(formErrors);
-  
+
     if (Object.keys(formErrors).length === 0) {
       try {
         const response = await axios.post(
@@ -26,21 +27,26 @@ const Login = () => {
           { username, password },
           { withCredentials: true } // Send cookies with request
         );
-  
+
         if (response.status === 200) {
-          Cookies.set('jwt', response.data.token, { expires: 7 }); // Store token in cookie
-          navigate('/home'); // Redirect to home
+          // Set the JWT token in cookies
+          Cookies.set('jwt', response.data.token, { expires: 1 / 24 });
+          setErrorMessage('');  // Clear any error messages
+          setSuccessMessage('Login successful!'); // Set success message
+          setTimeout(() => {
+            navigate('/home'); // Redirect to home after 2 seconds
+          }, 2000);
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          setErrorMessage('Invalid credentials'); // Invalid username or password
+          setErrorMessage('Invalid credentials');
         } else {
           setErrorMessage('Something went wrong. Please try again later.');
         }
       }
     }
   };
-  
+
   return (
     <div className="login-container">
       <h2>Login</h2>
@@ -68,6 +74,7 @@ const Login = () => {
         </div>
 
         {errorMessage && <p className="error">{errorMessage}</p>}
+        {successMessage && <p className="success">{successMessage}</p>}
 
         <button type="submit">Login</button>
       </form>

@@ -10,13 +10,16 @@ const Bin = () => {
 
   const handleCheckboxChange = (index) => {
     const newBins = [...bins];
-    newBins[index].collected = !newBins[index].collected;
-    setBins(newBins);
+    newBins[index].collected = !newBins[index].collected; // Toggle collected state
+    setBins(newBins); // Update state immediately
   };
+
+  const currentDate = new Date().toLocaleDateString();
 
   return (
     <div className="bin-container">
       <h2>Bin Information</h2>
+      <div className="date">{currentDate}</div>
       <table className="bin-table">
         <thead>
           <tr>
@@ -29,7 +32,10 @@ const Bin = () => {
         </thead>
         <tbody>
           {bins.map((bin, index) => (
-            <tr key={bin.id}>
+            <tr
+              key={bin.id}
+              className={bin.collected ? 'collected' : ''} // Apply 'collected' class if collected
+            >
               <td>{bin.id}</td>
               <td>{bin.full}</td>
               <td>{bin.fullPercentage}%</td>
@@ -37,8 +43,8 @@ const Bin = () => {
               <td>
                 <input
                   type="checkbox"
-                  checked={bin.collected}
-                  onChange={() => handleCheckboxChange(index)}
+                  checked={bin.collected} // Check if the bin is collected
+                  onChange={() => handleCheckboxChange(index)} // Handle change
                 />
               </td>
             </tr>

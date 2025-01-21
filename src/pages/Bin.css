@@ -8,6 +8,13 @@
     margin-bottom: 20px;
   }
   
+  .date {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+  }
+  
   .bin-table {
     width: 100%;
     border-collapse: collapse;
@@ -35,5 +42,14 @@
   
   input[type="checkbox"] {
     transform: scale(1.2);
+  }
+  
+  .collected {
+    background-color: #d4edda !important; /* Light green color for collected rows */
+  }
+  
+  /* Optional: Add a smooth transition to row color change */
+  .bin-table tr {
+    transition: background-color 0.3s ease;
   }
   

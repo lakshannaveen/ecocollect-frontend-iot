@@ -1,5 +1,3 @@
-/* Navbar.css */
-
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -15,9 +13,9 @@
 }
 
 .navbar-logo a {
-  text-decoration: none; 
+  text-decoration: none;
   color: #FFFFFF; /* White */
-  font-size: 1.5rem; 
+  font-size: 1.5rem;
 }
 
 .navbar-links {
@@ -39,5 +37,10 @@
 }
 
 .navbar-item a:hover {
+  color: #0000FF; /* Blue */
+}
+
+/* Active link style */
+.active-link {
   color: #0000FF; /* Blue */
 }

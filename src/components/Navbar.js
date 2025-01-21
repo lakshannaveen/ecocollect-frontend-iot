@@ -1,17 +1,31 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; 
+import { NavLink } from 'react-router-dom'; // Import NavLink instead of Link
 import './Navbar.css';
 
 const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-logo">
-        <Link to="/home">EcoCollect</Link> {/* Add Link to home page */}
+        <NavLink to="/home" className={({ isActive }) => (isActive ? 'active-link' : '')}>
+          EcoCollect
+        </NavLink> {/* Add Link to home page */}
       </div>
       <ul className="navbar-links">
-        <li className="navbar-item"><Link to="/bin-status">Bin Status</Link></li>
-        <li className="navbar-item"><Link to="/maps">Bin Maps</Link></li> {/* Navigate to Map */}
-        <li className="navbar-item"><Link to="/analysis">Analysis</Link></li>
+        <li className="navbar-item">
+          <NavLink to="/bin-status" className={({ isActive }) => (isActive ? 'active-link' : '')}>
+            Bin Status
+          </NavLink>
+        </li>
+        <li className="navbar-item">
+          <NavLink to="/maps" className={({ isActive }) => (isActive ? 'active-link' : '')}>
+            Bin Maps
+          </NavLink> {/* Navigate to Map */}
+        </li>
+        <li className="navbar-item">
+          <NavLink to="/analysis" className={({ isActive }) => (isActive ? 'active-link' : '')}>
+            Analysis
+          </NavLink>
+        </li>
       </ul>
     </nav>
   );

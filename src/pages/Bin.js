@@ -47,6 +47,14 @@ const Bin = () => {
     }
   };
 
+  // Function to check if the bin is over 90% full and update the status accordingly
+  const checkFullness = (bin) => {
+    if (bin.fullnessPercentage > 90) {
+      bin.isBinFull = true; // Set bin as full
+    }
+    return bin.isBinFull;
+  };
+
   const currentDate = new Date().toLocaleDateString();
 
   if (loading) {
@@ -87,29 +95,34 @@ const Bin = () => {
             </tr>
           </thead>
           <tbody>
-            {bins.map((bin, index) => (
-              <tr
-                key={bin._id}
-                className={bin.isCollected ? 'collected' : ''}
-              >
-                <td>
-                  {bin.temperature > 50 && (
-                    <i className="fa fa-exclamation-triangle" style={{ color: 'red', marginRight: '8px' }}></i>
-                  )}
-                  {bin.binId}
-                </td>
-                <td>{bin.isBinFull ? 'Yes' : 'No'}</td>
-                <td>{bin.fullnessPercentage}%</td>
-                <td>{bin.temperature}°C</td>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={bin.isCollected}
-                    onChange={() => handleCheckboxChange(index, bin._id)}
-                  />
-                </td>
-              </tr>
-            ))}
+            {bins.map((bin, index) => {
+              checkFullness(bin); // Check and update if the bin is full
+              return (
+                <tr key={bin._id} className={bin.isCollected ? 'collected' : ''}>
+                  <td>
+                    {bin.temperature > 50 && (
+                      <i className="fa fa-exclamation-triangle" style={{ color: 'red', marginRight: '8px' }}></i>
+                    )}
+                    {bin.binId}
+                  </td>
+                  <td>
+                    {bin.isBinFull && (
+                      <i className="fa fa-exclamation-triangle" style={{ color: 'red', marginRight: '8px' }}></i>
+                    )}
+                    {bin.isBinFull ? 'Yes' : 'No'}
+                  </td>
+                  <td>{bin.fullnessPercentage}%</td>
+                  <td>{bin.temperature}°C</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={bin.isCollected}
+                      onChange={() => handleCheckboxChange(index, bin._id)}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}

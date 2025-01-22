@@ -15,7 +15,7 @@ const Map = () => {
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
 
-  // Fetch bin locations from the server
+  
   useEffect(() => {
     const fetchBins = async () => {
       try {
@@ -33,23 +33,15 @@ const Map = () => {
     };
 
     fetchBins();
-  }, []); // Only run once when the component mounts
+  }, []); 
 
-  // Function to copy location to clipboard and open Google Maps
-  const copyLocation = (latitude, longitude) => {
-    const location = `Latitude: ${latitude}, Longitude: ${longitude}`;
+  // Function to open Google Maps with the bin location
+  const openGoogleMaps = (latitude, longitude) => {
     const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-
-    navigator.clipboard.writeText(location) // Copy location to clipboard
-      .then(() => {
-        alert("Location copied to clipboard!");
-        // Optionally, open Google Maps in a new tab
-        window.open(googleMapsUrl, '_blank');
-      })
-      .catch((err) => console.error("Failed to copy location", err));
+    window.open(googleMapsUrl, '_blank'); 
   };
 
-  // If loading or error, display appropriate messages
+  
   if (loading) {
     return <div className="loading">Loading bins...</div>;
   }
@@ -66,7 +58,7 @@ const Map = () => {
           zoom={7} // Set zoom level
           style={{ height: "500px", width: "100%" }}
         >
-          {/* TileLayer: Adds the map background */}
+          
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -80,13 +72,14 @@ const Map = () => {
                 bin.binLocation.latitude, // Latitude
                 bin.binLocation.longitude, // Longitude
               ]}
-              icon={wasteBinIcon} // Use the custom icon
+              icon={wasteBinIcon} 
             >
               <Popup>
                 <div>
                   <strong>Bin ID:</strong> {bin.binId}
                   <br />
-                  <button onClick={() => copyLocation(bin.binLocation.latitude, bin.binLocation.longitude)}>
+                  {/* Button to open Google Maps */}
+                  <button onClick={() => openGoogleMaps(bin.binLocation.latitude, bin.binLocation.longitude)}>
                     Location
                   </button>
                 </div>

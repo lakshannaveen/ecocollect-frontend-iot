@@ -66,6 +66,7 @@ const Bin = () => {
               <th>Bin ID</th>
               <th>Full</th>
               <th>Full Percentage</th>
+              <th>Temperature</th> {/* Add Temperature column */}
               <th>Collected</th>
             </tr>
           </thead>
@@ -78,6 +79,7 @@ const Bin = () => {
                 <td>{bin.binId}</td>
                 <td>{bin.isBinFull ? 'Yes' : 'No'}</td>
                 <td>{bin.fullnessPercentage}%</td>
+                <td>{bin.temperature}°C</td> {/* Display Temperature value */}
                 <td>
                   <input
                     type="checkbox"

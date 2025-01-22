@@ -35,6 +35,20 @@ const Map = () => {
     fetchBins();
   }, []); // Only run once when the component mounts
 
+  // Function to copy location to clipboard and open Google Maps
+  const copyLocation = (latitude, longitude) => {
+    const location = `Latitude: ${latitude}, Longitude: ${longitude}`;
+    const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+    navigator.clipboard.writeText(location) // Copy location to clipboard
+      .then(() => {
+        alert("Location copied to clipboard!");
+        // Optionally, open Google Maps in a new tab
+        window.open(googleMapsUrl, '_blank');
+      })
+      .catch((err) => console.error("Failed to copy location", err));
+  };
+
   // If loading or error, display appropriate messages
   if (loading) {
     return <div className="loading">Loading bins...</div>;
@@ -69,7 +83,13 @@ const Map = () => {
               icon={wasteBinIcon} // Use the custom icon
             >
               <Popup>
-                {`Bin ID: ${bin.binId}`} {/* Show binId in the popup */}
+                <div>
+                  <strong>Bin ID:</strong> {bin.binId}
+                  <br />
+                  <button onClick={() => copyLocation(bin.binLocation.latitude, bin.binLocation.longitude)}>
+                    Location
+                  </button>
+                </div>
               </Popup>
             </Marker>
           ))}

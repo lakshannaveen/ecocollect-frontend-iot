@@ -18,8 +18,6 @@ const Bin = () => {
         }
         const data = await response.json();
         setBins(data); // Update state with the fetched data
-        const highTempBinsList = data.filter(bin => bin.temperature > 50); // Filter bins with temperature over 50°C
-        setHighTempBins(highTempBinsList); // Store bins with high temperature
       } catch (error) {
         setError(error.message); // Set error message
       } finally {
@@ -30,18 +28,29 @@ const Bin = () => {
     fetchBins();
   }, []); // Empty dependency array ensures this runs only once when the component mounts
 
+  // Recalculate high temperature bins whenever bins or their status changes
+  useEffect(() => {
+    const highTempBinsList = bins.filter(bin => bin.temperature > 50 && !bin.isCollected); // Filter bins with high temperature over 50°C and not collected
+    setHighTempBins(highTempBinsList); // Update highTempBins state dynamically
+  }, [bins]); // This useEffect will run whenever the `bins` state changes
+
   const handleCheckboxChange = async (index, binId) => {
     const newBins = [...bins];
-    newBins[index].isCollected = !newBins[index].isCollected; // Toggle collected state in frontend
+    newBins[index].isCollected = !newBins[index].isCollected; // Toggle collected state
 
     // Update the collected status in the backend
     try {
-      await fetch(`http://localhost:5002/api/bins/${binId}`, {
+      const response = await fetch(`http://localhost:5002/api/bins/${binId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ collected: newBins[index].isCollected }),
       });
-      setBins(newBins); // Update state after successful backend update
+      if (!response.ok) throw new Error('Failed to update bin status');
+      const updatedBin = await response.json();
+
+      // After successful update, check if the bin is full
+      newBins[index] = updatedBin;
+      setBins(newBins); // Update the state with the new bin data
     } catch (error) {
       console.error('Error updating bin status:', error);
     }
@@ -69,6 +78,8 @@ const Bin = () => {
     <div className="bin-container">
       <h2>Bin Information</h2>
       <div className="date">{currentDate}</div>
+
+      {/* Display high temperature bins list as a warning if there are any bins with high temperature */}
       {highTempBins.length > 0 && (
         <div className="high-temp-warning-container">
           <h3 style={{ color: 'red' }}>Warning: The following bins have high temperatures:</h3>
@@ -81,6 +92,7 @@ const Bin = () => {
           </ul>
         </div>
       )}
+
       {bins.length === 0 ? (
         <div className="empty-data">No bins available</div>
       ) : (
@@ -100,13 +112,15 @@ const Bin = () => {
               return (
                 <tr key={bin._id} className={bin.isCollected ? 'collected' : ''}>
                   <td>
-                    {bin.temperature > 50 && (
+                    {/* Show warning icon if temperature is above 50°C and bin is not collected */}
+                    {bin.temperature > 50 && !bin.isCollected && (
                       <i className="fa fa-exclamation-triangle" style={{ color: 'red', marginRight: '8px' }}></i>
                     )}
                     {bin.binId}
                   </td>
                   <td>
-                    {bin.isBinFull && (
+                    {/* Show warning icon if bin is full and not collected */}
+                    {bin.isBinFull && !bin.isCollected && (
                       <i className="fa fa-exclamation-triangle" style={{ color: 'red', marginRight: '8px' }}></i>
                     )}
                     {bin.isBinFull ? 'Yes' : 'No'}

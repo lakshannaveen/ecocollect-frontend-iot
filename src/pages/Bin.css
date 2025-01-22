@@ -1,55 +1,86 @@
 .bin-container {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .date {
-    text-align: center;
-    margin-bottom: 10px;
-    font-size: 1.1em;
-    font-weight: bold;
-  }
-  
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.date {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.bin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.bin-table th,
+.bin-table td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.bin-table th {
+  background-color: #f2f2f2;
+}
+
+.bin-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.bin-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+.collected {
+  background-color: #d4edda !important; /* Light green color for collected rows */
+}
+
+.high-temp-warning-container {
+  margin: 20px 0;
+  background-color: #fff3cd;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.high-temp-warning-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.high-temp-warning-container li {
+  font-weight: bold;
+}
+
+/* Style for the warning icon */
+.fa-exclamation-triangle {
+  font-size: 18px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+@media (max-width: 768px) {
   .bin-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+    font-size: 0.9em; /* Slightly smaller font on mobile */
   }
-  
-  .bin-table th,
-  .bin-table td {
-    padding: 12px;
-    text-align: center;
-    border: 1px solid #ddd;
+
+  .bin-table th, .bin-table td {
+    padding: 8px;
   }
-  
-  .bin-table th {
-    background-color: #f2f2f2;
+
+  .bin-container {
+    padding: 15px;
   }
-  
-  .bin-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .bin-table tr:hover {
-    background-color: #f1f1f1;
-  }
-  
-  input[type="checkbox"] {
-    transform: scale(1.2);
-  }
-  
-  .collected {
-    background-color: #d4edda !important; /* Light green color for collected rows */
-  }
-  
-  /* Optional: Add a smooth transition to row color change */
-  .bin-table tr {
-    transition: background-color 0.3s ease;
-  }
-  
+}

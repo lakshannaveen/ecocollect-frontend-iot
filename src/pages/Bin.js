@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './Bin.css';
+import 'font-awesome/css/font-awesome.min.css'; // Import Font Awesome for icons
 
 const Bin = () => {
   const [bins, setBins] = useState([]); // Initialize bins state as an empty array
   const [loading, setLoading] = useState(true); // Track loading state
   const [error, setError] = useState(null); // Track errors
+  const [highTempBins, setHighTempBins] = useState([]); // State to hold bins with high temperature
 
   // Fetch bins from the backend API
   useEffect(() => {
@@ -16,6 +18,8 @@ const Bin = () => {
         }
         const data = await response.json();
         setBins(data); // Update state with the fetched data
+        const highTempBinsList = data.filter(bin => bin.temperature > 50); // Filter bins with temperature over 50°C
+        setHighTempBins(highTempBinsList); // Store bins with high temperature
       } catch (error) {
         setError(error.message); // Set error message
       } finally {
@@ -57,7 +61,19 @@ const Bin = () => {
     <div className="bin-container">
       <h2>Bin Information</h2>
       <div className="date">{currentDate}</div>
-      {bins.length === 0 ? ( // Check if bins array is empty
+      {highTempBins.length > 0 && (
+        <div className="high-temp-warning-container">
+          <h3 style={{ color: 'red' }}>Warning: The following bins have high temperatures:</h3>
+          <ul>
+            {highTempBins.map((bin) => (
+              <li key={bin._id}>
+                Bin ID: {bin.binId} - Temperature: {bin.temperature}°C
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {bins.length === 0 ? (
         <div className="empty-data">No bins available</div>
       ) : (
         <table className="bin-table">
@@ -66,7 +82,7 @@ const Bin = () => {
               <th>Bin ID</th>
               <th>Full</th>
               <th>Full Percentage</th>
-              <th>Temperature</th> {/* Add Temperature column */}
+              <th>Temperature</th>
               <th>Collected</th>
             </tr>
           </thead>
@@ -74,17 +90,22 @@ const Bin = () => {
             {bins.map((bin, index) => (
               <tr
                 key={bin._id}
-                className={bin.isCollected ? 'collected' : ''} // Apply 'collected' class if collected
+                className={bin.isCollected ? 'collected' : ''}
               >
-                <td>{bin.binId}</td>
+                <td>
+                  {bin.temperature > 50 && (
+                    <i className="fa fa-exclamation-triangle" style={{ color: 'red', marginRight: '8px' }}></i>
+                  )}
+                  {bin.binId}
+                </td>
                 <td>{bin.isBinFull ? 'Yes' : 'No'}</td>
                 <td>{bin.fullnessPercentage}%</td>
-                <td>{bin.temperature}°C</td> {/* Display Temperature value */}
+                <td>{bin.temperature}°C</td>
                 <td>
                   <input
                     type="checkbox"
-                    checked={bin.isCollected} // Check if the bin is collected
-                    onChange={() => handleCheckboxChange(index, bin._id)} // Handle change
+                    checked={bin.isCollected}
+                    onChange={() => handleCheckboxChange(index, bin._id)}
                   />
                 </td>
               </tr>

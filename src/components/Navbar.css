@@ -1,3 +1,4 @@
+/* Navbar Styles */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -41,6 +42,6 @@
 }
 
 /* Active link style */
-.active-link {
-  color: #0000FF; /* Blue */
+.navbar-item a.active-link {
+  color: #0000FF !important; /* Blue with higher specificity */
 }

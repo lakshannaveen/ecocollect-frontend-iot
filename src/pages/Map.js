@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
+import React, { useState, useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import "./Map.css";
@@ -11,42 +11,45 @@ const wasteBinIcon = new L.Icon({
 });
 
 const Map = () => {
-  const [selectedPosition, setSelectedPosition] = useState([7.8731, 80.7718]); // Default center for Sri Lanka
-  const [address, setAddress] = useState("Fetching address..."); // Display address for selected position
+  const [bins, setBins] = useState([]); // State for storing bins
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
 
-  const fetchAddress = async (lat, lng) => {
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`
-      );
-      const data = await response.json();
-      setAddress(data.display_name || "Address not found");
-    } catch (error) {
-      console.error("Error fetching address:", error);
-      setAddress("Unable to fetch address");
-    }
-  };
+  // Fetch bin locations from the server
+  useEffect(() => {
+    const fetchBins = async () => {
+      try {
+        const response = await fetch('http://localhost:5002/api/map/bins'); // Full URL for the API
+        if (!response.ok) {
+          throw new Error('Failed to fetch bins');
+        }
+        const data = await response.json();
+        setBins(data); // Set bins data
+      } catch (error) {
+        setError(error.message); // Handle errors
+      } finally {
+        setLoading(false); // Stop loading
+      }
+    };
 
-  const LocationSelector = () => {
-    useMapEvents({
-      click: (event) => {
-        const { lat, lng } = event.latlng;
-        setSelectedPosition([lat, lng]); // Update selected position
-        fetchAddress(lat, lng); // Fetch address for the new position
-      },
-    });
-    return null;
-  };
+    fetchBins();
+  }, []); // Only run once when the component mounts
+
+  // If loading or error, display appropriate messages
+  if (loading) {
+    return <div className="loading">Loading bins...</div>;
+  }
+
+  if (error) {
+    return <div className="error">Error: {error}</div>;
+  }
 
   return (
     <div className="map-page">
       <div className="map-container">
-        <h3>
-          Selected Location: {address}
-        </h3>
         <MapContainer
-          center={[7.8731, 80.7718]} // Coordinates for Sri Lanka
-          zoom={7} // Adjust zoom level
+          center={[7.8731, 80.7718]} // Coordinates for Sri Lanka (or your default center)
+          zoom={7} // Set zoom level
           style={{ height: "500px", width: "100%" }}
         >
           {/* TileLayer: Adds the map background */}
@@ -55,15 +58,21 @@ const Map = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
 
-          {/* Marker: Shows the selected position */}
-          <Marker position={selectedPosition} icon={wasteBinIcon}>
-            <Popup>
-              {address}
-            </Popup>
-          </Marker>
-
-          {/* Enable location selection by clicking */}
-          <LocationSelector />
+          {/* Render markers for each bin location */}
+          {bins.map((bin) => (
+            <Marker
+              key={bin.binId}
+              position={[
+                bin.binLocation.latitude, // Latitude
+                bin.binLocation.longitude, // Longitude
+              ]}
+              icon={wasteBinIcon} // Use the custom icon
+            >
+              <Popup>
+                {`Bin ID: ${bin.binId}`} {/* Show binId in the popup */}
+              </Popup>
+            </Marker>
+          ))}
         </MapContainer>
       </div>
     </div>

@@ -72,26 +72,57 @@ const Map = () => {
               icon={wasteBinIcon}
             >
               <Popup>
-                <div>
-                  <strong>Bin ID:</strong> {bin.binId}
-                  <br />
-                  <strong>Percentage:</strong> {bin.fullnessPercentage}%
-                  <br />
-                  <strong>Status:</strong> {bin.fullnessPercentage >= 100 ? "Full" : "Not Full"}
-                  <br />
-                  <strong>Temperature:</strong> {bin.temperature}&#8451;
-                  <br />
-                  {/* Button to open Google Maps */}
-                  <button
-                    onClick={() =>
-                      openGoogleMaps(
-                        bin.binLocation.latitude,
-                        bin.binLocation.longitude
-                      )
-                    }
-                  >
-                    Location
-                  </button>
+                <div style={{ fontSize: "14px", lineHeight: "1.5" }}>
+                  <strong style={{ fontSize: "16px", color: "#333" }}>
+                    Bin Details
+                  </strong>
+                  <hr style={{ margin: "5px 0" }} />
+                  <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                    <tbody>
+                      <tr>
+                        <td><strong>Bin ID:</strong></td>
+                        <td>{bin.binId}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Percentage:</strong></td>
+                        <td>{bin.fullnessPercentage}%</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Status:</strong></td>
+                        <td
+                          style={{
+                            color: bin.fullnessPercentage >= 100 ? "red" : "green",
+                          }}
+                        >
+                          {bin.fullnessPercentage >= 100 ? "Full" : "Not Full"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><strong>Temperature:</strong></td>
+                        <td>{bin.temperature}&#8451;</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div style={{ textAlign: "center", marginTop: "10px" }}>
+                    <button
+                      style={{
+                        padding: "5px 10px",
+                        backgroundColor: "#007bff",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                      }}
+                      onClick={() =>
+                        openGoogleMaps(
+                          bin.binLocation.latitude,
+                          bin.binLocation.longitude
+                        )
+                      }
+                    >
+                      Location
+                    </button>
+                  </div>
                 </div>
               </Popup>
             </Marker>

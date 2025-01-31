@@ -15,13 +15,12 @@ const Map = () => {
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
 
-  
   useEffect(() => {
     const fetchBins = async () => {
       try {
-        const response = await fetch('http://localhost:5002/api/map/bins'); // Full URL for the API
+        const response = await fetch("http://localhost:5002/api/map/bins"); // Full URL for the API
         if (!response.ok) {
-          throw new Error('Failed to fetch bins');
+          throw new Error("Failed to fetch bins");
         }
         const data = await response.json();
         setBins(data); // Set bins data
@@ -33,15 +32,14 @@ const Map = () => {
     };
 
     fetchBins();
-  }, []); 
+  }, []);
 
   // Function to open Google Maps with the bin location
   const openGoogleMaps = (latitude, longitude) => {
     const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-    window.open(googleMapsUrl, '_blank'); 
+    window.open(googleMapsUrl, "_blank");
   };
 
-  
   if (loading) {
     return <div className="loading">Loading bins...</div>;
   }
@@ -58,7 +56,6 @@ const Map = () => {
           zoom={7} // Set zoom level
           style={{ height: "500px", width: "100%" }}
         >
-          
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -72,14 +69,27 @@ const Map = () => {
                 bin.binLocation.latitude, // Latitude
                 bin.binLocation.longitude, // Longitude
               ]}
-              icon={wasteBinIcon} 
+              icon={wasteBinIcon}
             >
               <Popup>
                 <div>
                   <strong>Bin ID:</strong> {bin.binId}
                   <br />
+                  <strong>Percentage:</strong> {bin.fullnessPercentage}%
+                  <br />
+                  <strong>Status:</strong> {bin.fullnessPercentage >= 100 ? "Full" : "Not Full"}
+                  <br />
+                  <strong>Temperature:</strong> {bin.temperature}&#8451;
+                  <br />
                   {/* Button to open Google Maps */}
-                  <button onClick={() => openGoogleMaps(bin.binLocation.latitude, bin.binLocation.longitude)}>
+                  <button
+                    onClick={() =>
+                      openGoogleMaps(
+                        bin.binLocation.latitude,
+                        bin.binLocation.longitude
+                      )
+                    }
+                  >
                     Location
                   </button>
                 </div>

@@ -91,10 +91,10 @@ const Map = () => {
                         <td><strong>Status:</strong></td>
                         <td
                           style={{
-                            color: bin.fullnessPercentage >= 100 ? "red" : "green",
+                            color: bin.fullnessPercentage >= 95 ? "red" : "green",
                           }}
                         >
-                          {bin.fullnessPercentage >= 100 ? "Full" : "Not Full"}
+                          {bin.fullnessPercentage >= 95 ? "Full" : "Not Full"}
                         </td>
                       </tr>
                       <tr>

@@ -21,16 +21,17 @@ const Analysis = () => {
           data[0].day = "Single Day Data";
         }
 
-        // Ensure all necessary values are numbers
+        // Ensure all necessary values are numbers and include binId
         const validData = data.map((item) => ({
           day: item.day, // The date will be shown in the chart
+          binId: item.binId, // Bin ID
           avgTemperature: parseFloat(item.avgTemperature) || 0, // Fallback to 0 if NaN
           avgWeight: parseFloat(item.avgWeight) || 0, // Fallback to 0 if NaN
         }));
 
         // Setting chart data
         setChartData({
-          labels: validData.map((item) => item.day),
+          labels: validData.map((item) => `${item.day} - Bin: ${item.binId}`), // Label with day and binId
           datasets: [
             {
               label: "Avg Temperature (°C)",
@@ -63,7 +64,17 @@ const Analysis = () => {
                 maintainAspectRatio: false,
                 plugins: {
                   legend: { position: "top" },
-                  tooltip: { enabled: true },
+                  tooltip: {
+                    callbacks: {
+                      label: (tooltipItem) => {
+                        const dataset =
+                          tooltipItem.datasetIndex === 0
+                            ? "Avg Temperature"
+                            : "Avg Weight";
+                        return `${dataset}: ${tooltipItem.raw} (${tooltipItem.label})`; // Show binId with the data
+                      },
+                    },
+                  },
                 },
               }}
             />

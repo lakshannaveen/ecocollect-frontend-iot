@@ -15,15 +15,8 @@ const Analysis = () => {
       .then((data) => {
         console.log("API Response:", data); // Debugging Step 1
 
-        // Handle case where there might be a single data point
-        if (data.length === 1) {
-          // Manually add a label for the single data point
-          data[0].day = "Single Day Data";
-        }
-
-        // Ensure all necessary values are numbers and include binId
+        // Ensure all necessary values are numbers
         const validData = data.map((item) => ({
-          day: item.day, // The date will be shown in the chart
           binId: item.binId, // Bin ID
           avgTemperature: parseFloat(item.avgTemperature) || 0, // Fallback to 0 if NaN
           avgWeight: parseFloat(item.avgWeight) || 0, // Fallback to 0 if NaN
@@ -31,7 +24,7 @@ const Analysis = () => {
 
         // Setting chart data
         setChartData({
-          labels: validData.map((item) => `${item.day} - Bin: ${item.binId}`), // Label with day and binId
+          labels: validData.map((item) => `Bin: ${item.binId}`), // Label with binId
           datasets: [
             {
               label: "Avg Temperature (°C)",
@@ -71,7 +64,7 @@ const Analysis = () => {
                           tooltipItem.datasetIndex === 0
                             ? "Avg Temperature"
                             : "Avg Weight";
-                        return `${dataset}: ${tooltipItem.raw} (${tooltipItem.label})`; // Show binId with the data
+                        return `${dataset}: ${tooltipItem.raw} (Bin: ${tooltipItem.label})`; // Show binId with the data
                       },
                     },
                   },

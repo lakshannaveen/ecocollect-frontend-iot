@@ -56,9 +56,9 @@ const Bin = () => {
     }
   };
 
-  // Function to check if the bin is over 95% full
+  // Function to check if the bin is full (95% or above)
   const isBinFull = (bin) => {
-    return bin.fullnessPercentage > 95; // Only return true if fullness is strictly above 95%
+    return bin.fullnessPercentage >= 95; // Now includes 95%
   };
 
   const currentDate = new Date().toLocaleDateString();
@@ -114,7 +114,7 @@ const Bin = () => {
                   {bin.binId}
                 </td>
                 <td>
-                  {/* Show warning icon if bin is over 95% full and not collected */}
+                  {/* Show warning icon if bin is 95% or more full and not collected */}
                   {isBinFull(bin) && !bin.isCollected && (
                     <i className="fa fa-exclamation-triangle" style={{ color: 'red', marginRight: '8px' }}></i>
                   )}

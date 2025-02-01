@@ -1,0 +1,71 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevents unwanted horizontal scroll */
+  }
+  
+  html {
+    box-sizing: border-box;
+  }
+  
+  *, *::before, *::after {
+    box-sizing: inherit;
+  }
+  
+  .analysis-container {
+    width: 100%; /* Ensures it doesn’t exceed the viewport */
+    max-width: 1200px;
+    margin: 3rem auto;
+    text-align: center;
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .analysis-container h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+  
+  .chart-wrapper {
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 800px;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  .chart-wrapper p {
+    font-size: 1.2rem;
+    color: #888;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .analysis-container {
+      width: 95%;
+      padding: 0;
+    }
+  
+    .analysis-container h2 {
+      font-size: 1.5rem;
+    }
+  
+    .chart-wrapper {
+      padding: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .analysis-container h2 {
+      font-size: 1.3rem;
+    }
+  
+    .chart-wrapper {
+      padding: 1rem;
+    }
+  }
+  

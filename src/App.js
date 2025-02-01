@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Map from './pages/Map';
 import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import Bin from './pages/Bin';
+import Analysis from './pages/analysis';
 
 function App() {
   const location = useLocation(); // Get the current route path
@@ -31,6 +32,7 @@ function App() {
         {/* Route for Bin Maps */}
         <Route path="/maps" element={<Map />} />
         <Route path="/bin" element={<Bin />} />
+        <Route path="/analysis" element={<Analysis />} />
 
         {/* Default route (redirect to login if no matching route) */}
         <Route path="/" element={<Navigate to="/login" />} />

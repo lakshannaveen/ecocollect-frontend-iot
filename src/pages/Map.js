@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -10,10 +10,17 @@ const wasteBinIcon = new L.Icon({
   iconSize: [30, 30],
 });
 
+// Warning icon for moving bins
+const warningIcon = new L.Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/1828/1828640.png", // Warning icon URL
+  iconSize: [25, 25],
+});
+
 const Map = () => {
   const [bins, setBins] = useState([]); // State for storing bins
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
+  const prevBinLocations = useRef({}); // To track previous locations
 
   useEffect(() => {
     const fetchBins = async () => {
@@ -23,7 +30,29 @@ const Map = () => {
           throw new Error("Failed to fetch bins");
         }
         const data = await response.json();
-        setBins(data); // Set bins data
+        
+        // Check for location changes
+        const movingBins = {};
+        data.forEach(bin => {
+          const binId = bin.binId;
+          if (prevBinLocations.current[binId]) {
+            const prevLoc = prevBinLocations.current[binId];
+            const currLoc = bin.binLocation;
+            if (prevLoc.latitude !== currLoc.latitude || prevLoc.longitude !== currLoc.longitude) {
+              movingBins[binId] = true;
+            }
+          }
+          // Update previous locations
+          prevBinLocations.current[binId] = {...bin.binLocation};
+        });
+        
+        // Mark moving bins in the data
+        const updatedBins = data.map(bin => ({
+          ...bin,
+          isMoving: movingBins[bin.binId] || false
+        }));
+        
+        setBins(updatedBins);
       } catch (error) {
         setError(error.message); // Handle errors
       } finally {
@@ -31,7 +60,11 @@ const Map = () => {
       }
     };
 
+    // Fetch initially and then every 10 seconds
     fetchBins();
+    const interval = setInterval(fetchBins, 10000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   // Function to open Google Maps with the bin location
@@ -64,13 +97,23 @@ const Map = () => {
             <Marker
               key={bin.binId}
               position={[bin.binLocation.latitude, bin.binLocation.longitude]}
-              icon={wasteBinIcon}
+              icon={bin.isMoving ? warningIcon : wasteBinIcon}
             >
               <Popup>
                 <div style={{ fontSize: "14px", lineHeight: "1.5" }}>
                   <strong style={{ fontSize: "16px", color: "#333" }}>
                     Bin Details
                   </strong>
+                  {bin.isMoving && (
+                    <div style={{ 
+                      color: "red",
+                      fontWeight: "bold",
+                      margin: "5px 0",
+                      fontSize: "12px"
+                    }}>
+                      WARNING: This bin's location is changing frequently!
+                    </div>
+                  )}
                   <hr style={{ margin: "5px 0" }} />
                   <table style={{ width: "100%", borderCollapse: "collapse" }}>
                     <tbody>
@@ -98,7 +141,7 @@ const Map = () => {
                       </tr>
                       <tr>
                         <td><strong>Humidity:</strong></td>
-                        <td>{bin.humidity}%</td> {/* Added humidity display */}
+                        <td>{bin.humidity}%</td>
                       </tr>
                     </tbody>
                   </table>

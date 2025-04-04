@@ -94,45 +94,45 @@ const Bin = () => {
         <div className="empty-data">No bins available</div>
       ) : (
         <table className="bin-table">
-          <thead>
-            <tr>
-              <th>Bin ID</th>
-              <th>Full</th>
-              <th>Full Percentage</th>
-              <th>Temperature</th>
-              <th>Collected</th>
+        <thead>
+          <tr>
+            <th>Bin ID</th>
+            <th>Full</th>
+            <th>Full Percentage</th>
+            <th>Temperature</th>
+            <th>Humidity</th> {/* Added humidity column */}
+            <th>Collected</th>
+          </tr>
+        </thead>
+        <tbody>
+          {bins.map((bin, index) => (
+            <tr key={bin._id} className={bin.isCollected ? 'collected' : ''}>
+              <td>
+                {bin.temperature > 50 && !bin.isCollected && (
+                  <i className="fa fa-exclamation-triangle" style={{ color: 'red', marginRight: '8px' }}></i>
+                )}
+                {bin.binId}
+              </td>
+              <td>
+                {isBinFull(bin) && !bin.isCollected && (
+                  <i className="fa fa-exclamation-triangle" style={{ color: 'red', marginRight: '8px' }}></i>
+                )}
+                {isBinFull(bin) ? 'Yes' : 'No'}
+              </td>
+              <td>{bin.fullnessPercentage}%</td>
+              <td>{bin.temperature}°C</td>
+              <td>{bin.humidity}%</td> {/* Added humidity display */}
+              <td>
+                <input
+                  type="checkbox"
+                  checked={bin.isCollected}
+                  onChange={() => handleCheckboxChange(index, bin._id)}
+                />
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {bins.map((bin, index) => (
-              <tr key={bin._id} className={bin.isCollected ? 'collected' : ''}>
-                <td>
-                  {/* Show warning icon if temperature is above 50°C and bin is not collected */}
-                  {bin.temperature > 50 && !bin.isCollected && (
-                    <i className="fa fa-exclamation-triangle" style={{ color: 'red', marginRight: '8px' }}></i>
-                  )}
-                  {bin.binId}
-                </td>
-                <td>
-                  {/* Show warning icon if bin is 95% or more full and not collected */}
-                  {isBinFull(bin) && !bin.isCollected && (
-                    <i className="fa fa-exclamation-triangle" style={{ color: 'red', marginRight: '8px' }}></i>
-                  )}
-                  {isBinFull(bin) ? 'Yes' : 'No'}
-                </td>
-                <td>{bin.fullnessPercentage}%</td>
-                <td>{bin.temperature}°C</td>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={bin.isCollected}
-                    onChange={() => handleCheckboxChange(index, bin._id)}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          ))}
+        </tbody>
+      </table>
       )}
     </div>
   );

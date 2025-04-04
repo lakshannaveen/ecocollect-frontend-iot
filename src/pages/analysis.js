@@ -20,6 +20,7 @@ const Analysis = () => {
         const validDailyData = data.map((item) => ({
           binId: item.binId,
           avgTemperature: parseFloat(item.avgTemperature) || 0,
+          avgHumidity: parseFloat(item.avgHumidity) || 0, // Added humidity
           avgWeight: parseFloat(item.avgWeight) || 0,
         }));
 
@@ -30,6 +31,11 @@ const Analysis = () => {
               label: "Avg Temperature (°C)",
               data: validDailyData.map((item) => item.avgTemperature),
               backgroundColor: "rgba(255, 99, 132, 0.6)",
+            },
+            {
+              label: "Avg Humidity (%)", // New dataset for humidity
+              data: validDailyData.map((item) => item.avgHumidity),
+              backgroundColor: "rgba(153, 102, 255, 0.6)",
             },
             {
               label: "Avg Weight (kg)",
@@ -50,6 +56,7 @@ const Analysis = () => {
         const validWeeklyData = data.map((item) => ({
           binId: item.binId,
           avgTemperature: parseFloat(item.avgTemperature) || 0,
+          avgHumidity: parseFloat(item.avgHumidity) || 0, // Added humidity
           avgWeight: parseFloat(item.avgWeight) || 0,
         }));
 
@@ -60,6 +67,11 @@ const Analysis = () => {
               label: "Avg Temperature (°C)",
               data: validWeeklyData.map((item) => item.avgTemperature),
               backgroundColor: "rgba(255, 159, 64, 0.6)",
+            },
+            {
+              label: "Avg Humidity (%)", // New dataset for humidity
+              data: validWeeklyData.map((item) => item.avgHumidity),
+              backgroundColor: "rgba(75, 0, 130, 0.6)",
             },
             {
               label: "Avg Weight (kg)",
@@ -74,7 +86,7 @@ const Analysis = () => {
 
   return (
     <div className="analysis-container">
-      <h2>Daily Average Temperature & Weight</h2> {/* Heading for daily chart */}
+      <h2>Daily Average Temperature, Humidity & Weight</h2> {/* Updated heading */}
       {/* Daily Chart */}
       <div className="chart-wrapper">
         {dailyChartData ? (
@@ -91,10 +103,20 @@ const Analysis = () => {
                   tooltip: {
                     callbacks: {
                       label: (tooltipItem) => {
-                        const dataset =
-                          tooltipItem.datasetIndex === 0
-                            ? "Avg Temperature"
-                            : "Avg Weight";
+                        let dataset;
+                        switch (tooltipItem.datasetIndex) {
+                          case 0:
+                            dataset = "Avg Temperature";
+                            break;
+                          case 1:
+                            dataset = "Avg Humidity";
+                            break;
+                          case 2:
+                            dataset = "Avg Weight";
+                            break;
+                          default:
+                            dataset = "";
+                        }
                         return `${dataset}: ${tooltipItem.raw} (Bin: ${tooltipItem.label})`;
                       },
                     },
@@ -108,7 +130,7 @@ const Analysis = () => {
         )}
       </div>
 
-      <h2>Weekly Average Temperature & Weight</h2> {/* Heading for weekly chart */}
+      <h2>Weekly Average Temperature, Humidity & Weight</h2> {/* Updated heading */}
       {/* Weekly Chart */}
       <div className="chart-wrapper">
         {weeklyChartData ? (
@@ -125,10 +147,20 @@ const Analysis = () => {
                   tooltip: {
                     callbacks: {
                       label: (tooltipItem) => {
-                        const dataset =
-                          tooltipItem.datasetIndex === 0
-                            ? "Avg Temperature"
-                            : "Avg Weight";
+                        let dataset;
+                        switch (tooltipItem.datasetIndex) {
+                          case 0:
+                            dataset = "Avg Temperature";
+                            break;
+                          case 1:
+                            dataset = "Avg Humidity";
+                            break;
+                          case 2:
+                            dataset = "Avg Weight";
+                            break;
+                          default:
+                            dataset = "";
+                        }
                         return `${dataset}: ${tooltipItem.raw} (Bin: ${tooltipItem.label})`;
                       },
                     },

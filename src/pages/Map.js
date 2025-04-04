@@ -47,13 +47,12 @@ const Map = () => {
   if (error) {
     return <div className="error">Error: {error}</div>;
   }
-
   return (
     <div className="map-page">
       <div className="map-container">
         <MapContainer
-          center={[7.8731, 80.7718]} // Coordinates for Sri Lanka (or your default center)
-          zoom={7} // Set zoom level
+          center={[7.8731, 80.7718]}
+          zoom={7}
           style={{ height: "500px", width: "100%" }}
         >
           <TileLayer
@@ -61,14 +60,10 @@ const Map = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
 
-          {/* Render markers for each bin location */}
           {bins.map((bin) => (
             <Marker
               key={bin.binId}
-              position={[
-                bin.binLocation.latitude, // Latitude
-                bin.binLocation.longitude, // Longitude
-              ]}
+              position={[bin.binLocation.latitude, bin.binLocation.longitude]}
               icon={wasteBinIcon}
             >
               <Popup>
@@ -100,6 +95,10 @@ const Map = () => {
                       <tr>
                         <td><strong>Temperature:</strong></td>
                         <td>{bin.temperature}&#8451;</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Humidity:</strong></td>
+                        <td>{bin.humidity}%</td> {/* Added humidity display */}
                       </tr>
                     </tbody>
                   </table>

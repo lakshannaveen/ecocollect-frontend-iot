@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import "./Map.css";
+import { jsPDF } from "jspdf";
 
 // Custom waste bin icon for map
 const wasteBinIcon = new L.Icon({
@@ -73,6 +74,41 @@ const Map = () => {
     window.open(googleMapsUrl, "_blank");
   };
 
+  // Function to generate and download PDF
+  const downloadPdf = (bin) => {
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(18);
+    doc.text(`Waste Bin Details - ID: ${bin.binId}`, 15, 20);
+    
+    // Add details
+    doc.setFontSize(12);
+    let yPosition = 40;
+    
+    doc.text(`Bin ID: ${bin.binId}`, 15, yPosition);
+    yPosition += 10;
+    doc.text(`Fullness Percentage: ${bin.fullnessPercentage}%`, 15, yPosition);
+    yPosition += 10;
+    doc.text(`Status: ${bin.fullnessPercentage >= 95 ? "Full" : "Not Full"}`, 15, yPosition);
+    yPosition += 10;
+    doc.text(`Temperature: ${bin.temperature}°C`, 15, yPosition);
+    yPosition += 10;
+    doc.text(`Humidity: ${bin.humidity}%`, 15, yPosition);
+    yPosition += 10;
+    doc.text(`Location: Latitude ${bin.binLocation.latitude}, Longitude ${bin.binLocation.longitude}`, 15, yPosition);
+    yPosition += 10;
+    
+    if (bin.isMoving) {
+      doc.setTextColor(255, 0, 0);
+      doc.text('WARNING: This bin\'s location is changing frequently!', 15, yPosition);
+      doc.setTextColor(0, 0, 0);
+    }
+    
+    // Save the PDF
+    doc.save(`bin_details_${bin.binId}.pdf`);
+  };
+
   if (loading) {
     return <div className="loading">Loading bins...</div>;
   }
@@ -80,6 +116,7 @@ const Map = () => {
   if (error) {
     return <div className="error">Error: {error}</div>;
   }
+
   return (
     <div className="map-page">
       <div className="map-container">
@@ -145,7 +182,12 @@ const Map = () => {
                       </tr>
                     </tbody>
                   </table>
-                  <div style={{ textAlign: "center", marginTop: "10px" }}>
+                  <div style={{ 
+                    display: "flex", 
+                    justifyContent: "space-between", 
+                    marginTop: "10px",
+                    gap: "10px"
+                  }}>
                     <button
                       style={{
                         padding: "5px 10px",
@@ -154,6 +196,7 @@ const Map = () => {
                         border: "none",
                         borderRadius: "4px",
                         cursor: "pointer",
+                        flex: 1
                       }}
                       onClick={() =>
                         openGoogleMaps(
@@ -162,7 +205,21 @@ const Map = () => {
                         )
                       }
                     >
-                      Location
+                      View Location
+                    </button>
+                    <button
+                      style={{
+                        padding: "5px 10px",
+                        backgroundColor: "#28a745",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        flex: 1
+                      }}
+                      onClick={() => downloadPdf(bin)}
+                    >
+                      Download PDF
                     </button>
                   </div>
                 </div>

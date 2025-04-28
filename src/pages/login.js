@@ -50,9 +50,7 @@ const Login = ({ onSuccess }) => {
     }
   };
 
-  const handleQuickAccess = () => {
-    navigate('/home');
-  };
+ 
 
   return (
     <div className="login-container">
@@ -94,13 +92,6 @@ const Login = ({ onSuccess }) => {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
 
-          <button 
-            type="button" 
-            className="quick-access-button"
-            onClick={handleQuickAccess}
-          >
-            Quick Access (Skip Login)
-          </button>
         </form>
       </div>
 

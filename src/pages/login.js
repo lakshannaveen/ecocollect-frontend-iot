@@ -9,7 +9,7 @@ const Login = ({ onSuccess }) => {
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -21,11 +21,11 @@ const Login = ({ onSuccess }) => {
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-      setLoading(true); // Set loading to true before making the request
+      setLoading(true);
 
       try {
         const response = await axios.post(
-          'http://localhost:5002/api/account/login', // Backend API
+          'http://localhost:5002/api/account/login',
           { username, password },
           { withCredentials: true }
         );
@@ -34,14 +34,13 @@ const Login = ({ onSuccess }) => {
           setErrorMessage('');
           setSuccessMessage('Login successful!');
           setTimeout(() => {
-            setLoading(false); // Set loading to false when the login is complete
-            onSuccess(); // Trigger onSuccess from the parent (App.js)
-            navigate('/home'); // Redirect to home page after success
+            setLoading(false);
+            onSuccess();
+            navigate('/home');
           }, 2000);
         }
       } catch (error) {
-        setLoading(false); // Set loading to false if an error occurs
-
+        setLoading(false);
         if (error.response && error.response.status === 401) {
           setErrorMessage('Invalid username or password');
         } else {
@@ -51,40 +50,62 @@ const Login = ({ onSuccess }) => {
     }
   };
 
+  const handleQuickAccess = () => {
+    navigate('/home');
+  };
+
   return (
     <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter your username"
-          />
-          {errors.username && <p className="error">{errors.username}</p>}
+      <div className="login-card">
+        <div className="login-header">
+          <h2>Welcome Back</h2>
+          <p>Please enter your credentials to login</p>
         </div>
+        
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label>Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter your username"
+              className={errors.username ? 'error-input' : ''}
+            />
+            {errors.username && <span className="error-message">{errors.username}</span>}
+          </div>
 
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-          />
-          {errors.password && <p className="error">{errors.password}</p>}
-        </div>
+          <div className="input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              className={errors.password ? 'error-input' : ''}
+            />
+            {errors.password && <span className="error-message">{errors.password}</span>}
+          </div>
 
-        {errorMessage && <p className="error">{errorMessage}</p>}
-        {successMessage && <p className="success">{successMessage}</p>}
+          {errorMessage && <div className="error-banner">{errorMessage}</div>}
+          {successMessage && <div className="success-banner">{successMessage}</div>}
 
-        {!loading && <button type="submit">Login</button>}
-      </form>
+          <button type="submit" className="login-button" disabled={loading}>
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
+
+          <button 
+            type="button" 
+            className="quick-access-button"
+            onClick={handleQuickAccess}
+          >
+            Quick Access (Skip Login)
+          </button>
+        </form>
+      </div>
 
       {loading && (
-        <div className="overlay">
+        <div className="loading-overlay">
           <div className="loading-spinner"></div>
         </div>
       )}

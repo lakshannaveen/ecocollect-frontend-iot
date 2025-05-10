@@ -45,7 +45,7 @@ input[type="checkbox"] {
 }
 
 .collected {
-  background-color: #d4edda !important; /* Light green color for collected rows */
+  background-color: #d4edda !important;
 }
 
 .high-temp-warning-container {
@@ -64,16 +64,53 @@ input[type="checkbox"] {
   font-weight: bold;
 }
 
-/* Style for the warning icon */
 .fa-exclamation-triangle {
   font-size: 18px;
   margin-right: 10px;
   vertical-align: middle;
 }
 
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+.delete-btn .fa-trash {
+  margin-right: 5px;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2em;
+  margin-top: 20px;
+}
+
+.error {
+  text-align: center;
+  color: #dc3545;
+  font-size: 1.2em;
+  margin-top: 20px;
+}
+
+.empty-data {
+  text-align: center;
+  font-size: 1.2em;
+  margin-top: 20px;
+  color: #6c757d;
+}
+
 @media (max-width: 768px) {
   .bin-table {
-    font-size: 0.9em; /* Slightly smaller font on mobile */
+    font-size: 0.9em;
   }
 
   .bin-table th, .bin-table td {
@@ -82,5 +119,10 @@ input[type="checkbox"] {
 
   .bin-container {
     padding: 15px;
+  }
+
+  .delete-btn {
+    padding: 6px 8px;
+    font-size: 0.8em;
   }
 }
